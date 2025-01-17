@@ -1,0 +1,29 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Cousine:ital,wght@0,400;0,700;1,400;1,700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.apexcharts-legend-series {
+	background-color: rgb(191 147 228 / 0.1);
+	padding: 3px 3px;
+	border-radius: 10000px;
+	margin: 0 2px !important;
+	border: solid 1px rgb(191 147 228 / 0.1);
+
+}
+
+.apexcharts-legend.apexcharts-align-center {
+	top: 0px !important;
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.apexcharts-tooltip {
+	display: none;
+}
+
+.apexcharts-legend-marker svg {
+	stroke: none !important;
+}

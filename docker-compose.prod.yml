@@ -1,0 +1,15 @@
+services:
+  online-cv-app:
+    env_file:
+      frontend.env
+    container_name: online-cv-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - VITE_API_BASE_URL=https://api.alexis-thierry.com
+        - VITE_USERNAME=AlexThry
+        - VITE_PAGE_DESCRIPTION=Comme je travaille principalement avec des entreprises, je n’ai pas de projets époustouflants à exhiber sur mon portfolio. À la place, je me suis fait une mission de rendre mes contributions GitHub un peu plus vivantes. Si vous aimez les graphes faits maison et les lignes de code bien organisées, alors on est probablement faits pour s’entendre.
+    restart: always
+    ports: 
+      - 8000:8000
