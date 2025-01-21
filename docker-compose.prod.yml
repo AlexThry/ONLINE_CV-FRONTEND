@@ -1,7 +1,5 @@
 services:
   online-cv-app:
-    env_file:
-      frontend.env
     container_name: online-cv-app
     build:
       context: .

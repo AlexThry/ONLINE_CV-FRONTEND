@@ -19,6 +19,8 @@ class GithubService {
 
   async getTopLanguages(username: string): Promise<any> {
     const response = await axios.get(`${this.baseUrl}/user/${username}/top-languages`);
+    console.log('response', response);
+    
     return response.data;
   }
 }

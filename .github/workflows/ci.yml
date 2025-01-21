@@ -24,6 +24,8 @@ jobs:
     # needs: [build]
     # only build/deploy main branch on pushes
     if: ${{ (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev') && github.event_name == 'push' }} 
+    env:
+      
     steps:
       - name: Cache node modules
         uses: actions/cache@v4.0.0
