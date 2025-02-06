@@ -10,7 +10,7 @@ function Piechart() {
 		const fetchTopLanguages = async () => {
 			const githubService = new GithubService();
 			const topLanguages = await githubService.getTopLanguages(
-				import.meta.env.VITE_USERNAME
+				"AlexThry"
 			);
 
 			const series = topLanguages.map((lang: any) =>

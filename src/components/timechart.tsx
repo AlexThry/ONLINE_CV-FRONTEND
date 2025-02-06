@@ -13,7 +13,7 @@ function Timechart() {
 		const fetchCommitsData = async () => {
 			const githubService = new GithubService();
 			const commitsData = await githubService.getUserCommitsPerMonth(
-				import.meta.env.VITE_USERNAME
+				"AlexThry"
 			);
 
 			const sortedData = Object.entries(commitsData).sort(

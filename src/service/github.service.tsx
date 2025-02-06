@@ -4,7 +4,7 @@ class GithubService {
   private baseUrl: string;
 
   constructor() {
-    this.baseUrl = import.meta.env.VITE_API_BASE_URL + '/github';
+    this.baseUrl = 'https://api.alexis-thierry.com/github';
   }
 
   async getUserRepos(username: string, perPage: number): Promise<any> {

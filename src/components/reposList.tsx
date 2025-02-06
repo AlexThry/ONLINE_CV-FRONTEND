@@ -11,7 +11,7 @@ function RepoList() {
 		const fetchRepos = async () => {
 			const githubService = new GithubService();
 			const reposData = await githubService.getUserRepos(
-				import.meta.env.VITE_USERNAME,
+				"AlexThry",
 				5
 			);
 			setRepos(reposData);
