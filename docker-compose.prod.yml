@@ -10,4 +10,4 @@ services:
         - VITE_PAGE_DESCRIPTION=Étudiant ingénieur en data et développeur web sur des projets internes en entreprise, j’adore explorer la data science et développer des idées en code. Pas de projets extravagants ici, mais sur GitHub, c’est une collection de petits et grands projets qui reflètent ma curiosité et mon goût pour le travail bien fait.
     restart: always
     ports: 
-      - 8000:5001
+      - 5001:8000
