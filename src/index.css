@@ -188,11 +188,22 @@ html.lenis body {
 
 .apexcharts-datalabel-label,
 .apexcharts-datalabel-value,
-.apexcharts-text {
+.apexcharts-text,
+.apexcharts-datalabels-group
+ {
 	fill: #f5f1fa !important;
+	color: #f5f1fa !important;
 	font-family: "Cousine", monospace !important;
+}
+
+svg > g.apexcharts-inner.apexcharts-graphical > g > g.apexcharts-datalabels-group > text.apexcharts-text.apexcharts-datalabel-label,
+svg > g.apexcharts-inner.apexcharts-graphical > g > g.apexcharts-datalabels-group > text.apexcharts-text.apexcharts-datalabel-value
+{
+	fill: #eac8ca !important;
+	color: #eac8ca !important;
 }
 
 .apexcharts-legend-marker svg {
 	stroke: none !important;
 }
+
