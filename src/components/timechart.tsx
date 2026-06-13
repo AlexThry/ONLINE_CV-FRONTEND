@@ -1,145 +1,116 @@
-import { useEffect, useState } from "react";
-import ApexCharts from "apexcharts";
-import GithubService from "../service/github.service";
+import { useMemo } from "react";
+import Chart from "react-apexcharts";
+import type { ApexOptions } from "apexcharts";
+import { useGithubData } from "../hooks/useGithubData";
 
-function Timechart() {
-	const [chartData, setChartData] = useState<{
-		series: number[];
-		categories: string[];
-	}>({ series: [], categories: [] });
-	const [isLoading, setIsLoading] = useState(true);
+function Timechart({ reducedMotion }: { reducedMotion: boolean }) {
+	const { commits, isLoading, stats } = useGithubData();
 
-	useEffect(() => {
-		const fetchCommitsData = async () => {
-			const githubService = new GithubService();
-			const commitsData = await githubService.getUserCommitsPerMonth(
-				"AlexThry"
-			);
+	const series = useMemo(
+		() => [{ name: "Commits", data: commits.map((c) => c.count) }],
+		[commits]
+	);
+	const categories = useMemo(() => commits.map((c) => c.label), [commits]);
 
-			const sortedData = Object.entries(commitsData).sort(
-				([a], [b]) => new Date(a).getTime() - new Date(b).getTime()
-			);
-			const categories = sortedData.map(([date]) => date);
-			const series: number[] = sortedData.map(
-				([, count]) => count as number
-			);
-
-			setChartData({ series, categories });
-			setIsLoading(false);
-		};
-
-		fetchCommitsData();
-	}, []);
-
-	useEffect(() => {
-		if (!isLoading) {
-			const options = {
-				chart: {
-					height: "80%",
-					maxWidth: "100%",
-					type: "area",
-					fontFamily: "Cousine",
-					dropShadow: {
-						enabled: false,
-					},
-					toolbar: {
-						show: false,
+	const options = useMemo<ApexOptions>(
+		() => ({
+			chart: {
+				type: "area",
+				background: "transparent",
+				fontFamily: "Cousine, monospace",
+				toolbar: { show: false },
+				zoom: { enabled: false },
+				animations: {
+					enabled: !reducedMotion,
+					speed: 1000,
+					easing: "easeinout",
+				},
+			},
+			colors: ["#99E1D9"],
+			stroke: { curve: "smooth", width: 3 },
+			fill: {
+				type: "gradient",
+				gradient: {
+					shadeIntensity: 1,
+					opacityFrom: 0.45,
+					opacityTo: 0,
+					stops: [0, 95],
+				},
+			},
+			dataLabels: { enabled: false },
+			markers: {
+				size: 0,
+				strokeColors: "#06040A",
+				colors: ["#99E1D9"],
+				hover: { size: 6 },
+			},
+			grid: {
+				borderColor: "rgba(191,147,228,0.08)",
+				strokeDashArray: 4,
+				xaxis: { lines: { show: false } },
+				yaxis: { lines: { show: true } },
+				padding: { left: 6, right: 6, top: 0, bottom: 0 },
+			},
+			xaxis: {
+				categories,
+				tickPlacement: "on",
+				labels: {
+					rotate: 0,
+					hideOverlappingLabels: true,
+					style: {
+						colors: "rgba(245,241,250,0.5)",
+						fontFamily: "Cousine, monospace",
+						fontSize: "10px",
 					},
 				},
-				tooltip: {
-					enabled: true,
-					marker: {
-						show: true,
+				axisBorder: { show: false },
+				axisTicks: { show: false },
+				tooltip: { enabled: false },
+			},
+			yaxis: {
+				labels: {
+					style: {
+						colors: "rgba(245,241,250,0.4)",
+						fontFamily: "Cousine, monospace",
+						fontSize: "10px",
 					},
-					shared: false,
-					x: {
-						show: true,
-					},
-					onDatasetHover: {
-						highlightDataSeries: false,
-					},
+					formatter: (v: number) => `${Math.round(v)}`,
 				},
-				fill: {
-					type: "gradient",
-					gradient: {
-						opacityFrom: 0,
-						opacityTo: 0,
-						shade: "#99E1D9",
-						gradientToColors: ["#99E1D9"],
-					},
-				},
-				dataLabels: {
-					enabled: false,
-				},
-				stroke: {
-					width: 8,
-				},
-				grid: {
-					show: false,
-					strokeDashArray: 4,
-					padding: {
-						left: 2,
-						right: 2,
-						top: 0,
-					},
-				},
-				series: [
-					{
-						name: "Commits",
-						data: chartData.series,
-						color: "#99E1D9",
-					},
-				],
-				xaxis: {
-					categories: chartData.categories,
-					labels: {
-						show: false,
-					},
-					axisBorder: {
-						show: false,
-					},
-					axisTicks: {
-						show: false,
-					},
-					tooltip: {
-						enabled: false,
-					},
-				},
-				yaxis: {
-					show: false,
-				},
-			};
-
-			if (
-				document.getElementById("area-chart") &&
-				typeof ApexCharts !== "undefined"
-			) {
-				const chart = new ApexCharts(
-					document.getElementById("area-chart"),
-					options
-				);
-				chart.render();
-			}
-		}
-	}, [chartData, isLoading]);
+			},
+			tooltip: {
+				theme: "dark",
+				x: { show: true },
+				y: { formatter: (v: number) => `${v} commits` },
+			},
+		}),
+		[categories, reducedMotion]
+	);
 
 	return (
-		<>
-			<div className="flex flex-col h-full w-full max-h-full">
-				<p className="text-[16px] text-commits-base font-cousine">
-					Commits
+		<div className="flex h-full w-full flex-col">
+			<div className="flex items-center justify-between">
+				<p className="font-cousine text-xs uppercase tracking-[0.2em] text-commits-base">
+					Commits / mois
 				</p>
+				<span className="font-cousine text-[10px] text-mist/40">
+					{stats.totalCommits.toLocaleString("fr-FR")} au total
+				</span>
+			</div>
+
+			<div className="flex flex-1 items-center justify-center">
 				{isLoading ? (
-					<div className="w-full h-full flex justify-center items-center">
-						<span className="loading loading-bars loading-lg bg-commits-base"></span>
-					</div>
+					<div className="my-8 h-40 w-full animate-pulse-soft rounded-xl bg-gradient-to-t from-commits-base/20 to-transparent" />
 				) : (
-					<div className="h-full border-b border-l border-main-100 border-opacity-10">
-						<div id="area-chart"></div>
-					</div>
+					<Chart
+						type="area"
+						series={series}
+						options={options}
+						height={300}
+						width="100%"
+					/>
 				)}
 			</div>
-		</>
+		</div>
 	);
 }
 

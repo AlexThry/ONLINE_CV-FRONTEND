@@ -34,8 +34,8 @@ export default {
 		},
 		extend: {
 			fontFamily: {
-				"serif-title": ["DM Serif Display"],
-				cousine: ["Cousine", "serif"],
+				"serif-title": ["DM Serif Display", "serif"],
+				cousine: ["Cousine", "monospace"],
 			},
 			colors: {
 				main: {
@@ -46,6 +46,10 @@ export default {
 					700: "#6006AE",
 					900: "#410080",
 				},
+				/* Atmosphere */
+				night: "#06040A",
+				ink: "#0C0814",
+				mist: "#F5F1FA",
 				languages: {
 					base: "#EAC8CA",
 				},
@@ -55,6 +59,40 @@ export default {
 				repos: {
 					base: "#F9F8F8",
 				},
+			},
+			transitionTimingFunction: {
+				expo: "cubic-bezier(0.16, 1, 0.3, 1)",
+				"in-out-soft": "cubic-bezier(0.65, 0.05, 0.36, 1)",
+			},
+			letterSpacing: {
+				huge: "0.4em",
+			},
+			keyframes: {
+				marquee: {
+					"0%": { transform: "translateX(0)" },
+					"100%": { transform: "translateX(-50%)" },
+				},
+				float: {
+					"0%, 100%": { transform: "translateY(0)" },
+					"50%": { transform: "translateY(-14px)" },
+				},
+				shimmer: {
+					"100%": { transform: "translateX(100%)" },
+				},
+				"spin-slow": {
+					to: { transform: "rotate(360deg)" },
+				},
+				"pulse-soft": {
+					"0%, 100%": { opacity: "1" },
+					"50%": { opacity: "0.45" },
+				},
+			},
+			animation: {
+				marquee: "marquee 32s linear infinite",
+				float: "float 7s ease-in-out infinite",
+				shimmer: "shimmer 1.8s infinite",
+				"spin-slow": "spin-slow 26s linear infinite",
+				"pulse-soft": "pulse-soft 2.4s ease-in-out infinite",
 			},
 		},
 	},

@@ -1,77 +1,85 @@
-import { useEffect, useState } from "react";
-import GithubService from "../service/github.service";
+import { useLayoutEffect, useRef } from "react";
+import { gsap } from "../lib/gsap";
+import { useGithubData } from "../hooks/useGithubData";
 
-function RepoList() {
-	const [repos, setRepos] = useState<
-		{ name: string; description: string; owner: string; html_url: string }[]
-	>([]);
-	const [isLoading, setIsLoading] = useState(true);
+function RepoList({ reducedMotion }: { reducedMotion: boolean }) {
+	const root = useRef<HTMLDivElement>(null);
+	const { repos, isLoading } = useGithubData();
 
-	useEffect(() => {
-		const fetchRepos = async () => {
-			const githubService = new GithubService();
-			const reposData = await githubService.getUserRepos(
-				"AlexThry",
-				5
-			);
-			setRepos(reposData);
-			setIsLoading(false);
-		};
-
-		fetchRepos();
-	}, []);
-
-	const repo = (
-		title: string,
-		description: string,
-		owner: string,
-		url: string,
-		last: boolean = false
-	) => {
-		return (
-			<>
-				<a
-					href={url}
-					target="_blank"
-					className="flex w-full px-[10px] items-center justify-around border-main-100 h-[100px] border-opacity-10 gap-[10px] md:flex-1 md:h-auto hover:bg-main-100 hover:bg-opacity-10"
-				>
-					<h1 className="font-cousine text-[12px] w-[120px] line-clamp-3 break-words text-repos-base font-bold mdl:text-[16px]">
-						{title}
-					</h1>
-					<p className="font-cousine line-clamp-3 text-[10px] text-repos-base w-[110px] mdl:text-[12px] mdl:w-[170px] lg:w-[350px]">
-						{description}
-					</p>
-					<p className="font-cousine line-clamp-1 text-[10px] text-repos-base w-[80px] break-words mdl:text-[12px] md:w-[100px] lg:w-[150px]">
-						{owner}
-					</p>
-				</a>
-				{!last && (
-					<div className="w-full border-main-100 border-opacity-10 border-b h-[1px]" />
-				)}
-			</>
-		);
-	};
+	useLayoutEffect(() => {
+		if (reducedMotion || isLoading || !root.current) return;
+		const ctx = gsap.context(() => {
+			gsap.from(".repo-row", {
+				y: 32,
+				autoAlpha: 0,
+				duration: 0.9,
+				ease: "expoOut",
+				stagger: 0.08,
+				scrollTrigger: { trigger: root.current, start: "top 82%" },
+			});
+		}, root);
+		return () => ctx.revert();
+	}, [reducedMotion, isLoading]);
 
 	return (
-		<>
-			<div className="flex flex-col flex-auto w-full">
-				{isLoading ? (
-					<div className="w-full h-full flex justify-center items-center py-[25px]">
-						<span className="loading loading-bars loading-lg bg-repos-base"></span>
-					</div>
-				) : (
-					repos.map((repoData, index) => {
-						return repo(
-							repoData.name,
-							repoData.description,
-							repoData.owner,
-							repoData.html_url,
-							index === repos.length - 1
-						);
-					})
-				)}
+		<div ref={root} className="flex h-full w-full flex-col">
+			<div className="flex items-center justify-between px-5 pt-5 sm:px-7 sm:pt-6">
+				<p className="font-cousine text-xs uppercase tracking-[0.2em] text-repos-base">
+					Dépôts récents
+				</p>
+				<span className="font-cousine text-[10px] text-mist/40">
+					{isLoading ? "—" : `${repos.length} projets`}
+				</span>
 			</div>
-		</>
+
+			<div className="mt-4 flex flex-1 flex-col">
+				{isLoading
+					? Array.from({ length: 5 }).map((_, i) => (
+							<div
+								key={i}
+								className="flex items-center gap-4 border-t border-main-100/10 px-5 py-6 sm:px-7"
+							>
+								<div className="h-3 w-6 animate-pulse-soft rounded bg-main-100/20" />
+								<div className="h-4 flex-1 animate-pulse-soft rounded bg-main-100/15" />
+							</div>
+					  ))
+					: repos.map((repo, i) => (
+							<a
+								key={`${repo.name}-${i}`}
+								href={repo.html_url}
+								target="_blank"
+								rel="noopener noreferrer"
+								data-cursor
+								className="repo-row group relative flex items-center gap-4 overflow-hidden border-t border-main-100/10 px-5 py-5 sm:gap-6 sm:px-7 sm:py-6"
+							>
+								{/* hover sweep */}
+								<span className="pointer-events-none absolute inset-0 origin-bottom scale-y-0 bg-main-100/[0.06] transition-transform duration-500 ease-expo group-hover:scale-y-100" />
+								<span className="pointer-events-none absolute bottom-0 left-0 top-0 w-px origin-bottom scale-y-0 bg-gradient-to-t from-languages-base via-main-100 to-commits-base transition-transform duration-500 ease-expo group-hover:scale-y-100" />
+
+								<span className="relative z-10 w-7 shrink-0 font-cousine text-xs text-mist/40">
+									{String(i + 1).padStart(2, "0")}
+								</span>
+
+								<div className="relative z-10 min-w-0 flex-1">
+									<h3 className="truncate font-serif-title text-lg text-mist transition-colors duration-300 group-hover:text-main-100 sm:text-2xl">
+										{repo.name}
+									</h3>
+									<p className="mt-1 line-clamp-1 font-cousine text-[11px] text-mist/50 sm:text-xs">
+										{repo.description || "Sans description"}
+									</p>
+								</div>
+
+								<span className="relative z-10 hidden shrink-0 rounded-full border border-main-100/20 px-3 py-1 font-cousine text-[10px] uppercase tracking-widest text-mist/45 md:inline-block">
+									{repo.owner}
+								</span>
+
+								<span className="relative z-10 shrink-0 font-serif-title text-xl text-main-100 transition-transform duration-300 ease-expo group-hover:-translate-y-1 group-hover:translate-x-1">
+									↗
+								</span>
+							</a>
+					  ))}
+			</div>
+		</div>
 	);
 }
 
