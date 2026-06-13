@@ -22,6 +22,7 @@ function Piechart({ reducedMotion }: { reducedMotion: boolean }) {
 			chart: {
 				type: "donut",
 				background: "transparent",
+				foreColor: "#F5F1FA",
 				fontFamily: "Cousine, monospace",
 				animations: { enabled: !reducedMotion, speed: 900 },
 			},
