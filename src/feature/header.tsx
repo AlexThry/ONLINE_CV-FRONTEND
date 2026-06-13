@@ -24,9 +24,10 @@ function Header({ loaded, reducedMotion }: HeaderProps) {
 		let descSplit: SplitText | undefined;
 
 		const ctx = gsap.context(() => {
+			// No line mask on the title: masking clips the descenders (the
+			// bottom of the "y" in Thierry). We fade + rise the chars instead.
 			titleSplit = new SplitText(".hero-title", {
 				type: "lines,chars",
-				mask: "lines",
 			});
 			descSplit = new SplitText(".hero-desc", {
 				type: "lines",
@@ -35,7 +36,7 @@ function Header({ loaded, reducedMotion }: HeaderProps) {
 
 			const fadeBits = gsap.utils.toArray<HTMLElement>(".hero-fade");
 
-			gsap.set(titleSplit.chars, { yPercent: 115 });
+			gsap.set(titleSplit.chars, { yPercent: 115, autoAlpha: 0 });
 			gsap.set(descSplit.lines, { yPercent: 110 });
 			gsap.set(fadeBits, { autoAlpha: 0, y: 24 });
 			gsap.set(portraitRef.current, { autoAlpha: 0, scale: 0.92, y: 40 });
@@ -51,7 +52,7 @@ function Header({ loaded, reducedMotion }: HeaderProps) {
 			})
 				.to(
 					titleSplit.chars,
-					{ yPercent: 0, duration: 1.2, stagger: 0.022 },
+					{ yPercent: 0, autoAlpha: 1, duration: 1.2, stagger: 0.022 },
 					"-=0.7"
 				)
 				.to(
@@ -122,7 +123,7 @@ function Header({ loaded, reducedMotion }: HeaderProps) {
 			<div className="mt-10 grid grid-cols-1 items-center gap-12 lg:mt-14 lg:grid-cols-12 lg:gap-8">
 				{/* Name + role */}
 				<div className="order-2 lg:order-1 lg:col-span-8">
-					<h1 className="hero-title font-serif-title leading-[0.86] tracking-[-0.02em] text-mist">
+					<h1 className="hero-title font-serif-title leading-[0.95] tracking-[-0.02em] text-mist pb-[0.12em]">
 						<span className="block text-[clamp(3.6rem,13vw,11rem)]">
 							Alexis
 						</span>

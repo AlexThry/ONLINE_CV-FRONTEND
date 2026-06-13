@@ -3,7 +3,7 @@ import { useReveal } from "../hooks/useReveal";
 
 const USERNAME = import.meta.env.VITE_USERNAME || "AlexThry";
 const GITHUB_URL = `https://github.com/${USERNAME}`;
-const EMAIL = "alexist103@gmail.com";
+const EMAIL = "alexis.thierry.pro@gmail.com";
 const MARQUEE = "Alexis Thierry ✦ Data Engineer ✦ Web Developer ✦ ";
 
 function Footer({ reducedMotion }: { reducedMotion: boolean }) {

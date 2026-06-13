@@ -69,18 +69,23 @@ function Cursor() {
 				gsap.to(dot, { scale: 1, duration: 0.35, ease: "expoOut" });
 			}
 		};
-		const leave = () => gsap.to([dot, ring], { autoAlpha: 0, duration: 0.3 });
+		const hide = () => {
+			visible = false;
+			gsap.to([dot, ring], { autoAlpha: 0, duration: 0.3 });
+		};
 
 		window.addEventListener("pointermove", move);
 		document.addEventListener("pointerover", over);
 		document.addEventListener("pointerout", out);
-		document.addEventListener("pointerleave", leave);
+		document.documentElement.addEventListener("pointerleave", hide);
+		window.addEventListener("blur", hide);
 
 		return () => {
 			window.removeEventListener("pointermove", move);
 			document.removeEventListener("pointerover", over);
 			document.removeEventListener("pointerout", out);
-			document.removeEventListener("pointerleave", leave);
+			document.documentElement.removeEventListener("pointerleave", hide);
+			window.removeEventListener("blur", hide);
 		};
 	}, [enabled]);
 
