@@ -88,7 +88,7 @@ export default {
 				},
 			},
 			animation: {
-				marquee: "marquee 32s linear infinite",
+				marquee: "marquee 60s linear infinite",
 				float: "float 7s ease-in-out infinite",
 				shimmer: "shimmer 1.8s infinite",
 				"spin-slow": "spin-slow 26s linear infinite",

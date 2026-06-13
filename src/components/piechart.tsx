@@ -46,8 +46,8 @@ function Piechart({ reducedMotion }: { reducedMotion: boolean }) {
 							name: {
 								show: true,
 								fontFamily: "Cousine, monospace",
-								fontSize: "11px",
-								color: "#BF93E4",
+								fontSize: "12px",
+								color: "#F5F1FA",
 								offsetY: -2,
 							},
 							value: {
